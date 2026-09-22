@@ -22,25 +22,37 @@ Description: A simple patient registration form to register an account for them 
     <link rel="stylesheet" href="style.css">
 </head>
 
-<nav style="
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    background-color: #b50000;
-    color: white;
-">
-    <div style="font-size: 24px; font-weight: bold;">
-        CougarAid Medical Center
-    </div>
+<nav aria-label="Primary navigation" style="
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+        padding: 12px 24px;
+        background-color: #ffffff;
+        border-bottom: 6px solid #c8102e;
+    ">
+    <a href="/" aria-label="CougarAid Medical Center home"
+        style="display: inline-flex; align-items: center; text-decoration: none;">
+        <img src="/MIS-7375/hw-1/assets/cougaraid-logo.png" alt="CougarAid Medical Center" style="
+                display: block;
+                width: min(360px, 52vw);
+                height: auto;
+            ">
+    </a>
 
-    <div style="display: flex; gap: 24px;">
-        <a href="#registration-form" style="color: white; text-decoration: none;">
+    <div style="
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            font-family: 'Source Sans 3', Arial, sans-serif;
+            font-weight: 700;
+        ">
+        <a href="#registration-form" style="color: #960c22; text-decoration: none;">
             📝 Registration Form
         </a>
 
-        <a href="https://www.cdc.gov/" target="_blank" rel="noopener noreferrer"
-            style="color: white; text-decoration: none;">
+        <a href="https://www.cdc.gov/" style="color: #960c22; text-decoration: none;">
             🌐 CDC Website
         </a>
     </div>
