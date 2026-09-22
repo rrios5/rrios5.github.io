@@ -1,3 +1,11 @@
+<!--
+Program name: Patient Registration Protocol
+Author: Rogelio Rios
+Date created: 09/21/2026
+Date last edited: 09/26/2026
+Version: 1.0
+Description: A simple patient registration form to register an account for them in our system.
+-->
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -11,17 +19,202 @@
     <title>HW1</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="style.css">
 </head>
+
+<nav style="
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background-color: #b50000;
+    color: white;
+">
+    <div style="font-size: 24px; font-weight: bold;">
+        CougarAid Medical Center
+    </div>
+
+    <div style="display: flex; gap: 24px;">
+        <a href="#registration-form" style="color: white; text-decoration: none;">
+            📝 Registration Form
+        </a>
+
+        <a href="https://www.cdc.gov/" target="_blank" rel="noopener noreferrer"
+            style="color: white; text-decoration: none;">
+            🌐 CDC Website
+        </a>
+    </div>
+</nav>
+
 
 <body>
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-    <h1>Homework 1</h1>
+    <h1>CougarAid Medical Center</h1>
+    <div>
+        <div>
+            <h2>You Information</h2>
+            <!-- Form Inputs -->
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; gap: 12px;">
+                    <div style="display: flex; gap: 12px; flex-direction: column;">
+                        <label>First Name</label>
+                        <input />
+                    </div>
+                    <div style="display: flex; gap: 12px; flex-direction: column;">
+                        <label>Middle Initial</label>
+                        <input style="width: 60px;" />
+                    </div>
+                    <div style="display: flex; gap: 12px; flex-direction: column;">
+                        <label>Last Name</label>
+                        <input />
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                    <div style="display: flex; gap: 12px; flex-direction: column;">
+                        <label>Email</label>
+                        <input />
+                    </div>
+                    <div style="display: flex; gap: 12px; flex-direction: column;">
+                        <label>Phone Number</label>
+                        <input />
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                    <div style="display: flex; gap: 12px; flex-direction: column;">
+                        <label>Gender</label>
+                        <div style="display: flex; gap: 12px;">
+                            <label><input type="radio" name="gender" value="female" /> Female</label>
+                            <label><input type="radio" name="gender" value="male" /> Male</label>
+                            <label><input type="radio" name="gender" value="other" /> Other</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Health History</h2>
+
+            <p>Check all of the following illnesses you've had in the past.</p>
+
+            <fieldset>
+                <legend>Have you had any of the following?</legend>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label>
+                        <input type="checkbox" name="illnesses" value="chicken-pox">
+                        Chicken pox
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="illnesses" value="measles">
+                        Measles
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="illnesses" value="covid-19">
+                        COVID-19
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="illnesses" value="mumps">
+                        Mumps
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="illnesses" value="whooping-cough">
+                        Whooping cough
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="illnesses" value="influenza">
+                        Influenza
+                    </label>
+                </div>
+            </fieldset>
+
+            <h2>Vaccination &amp; Coverage</h2>
+
+            <div style="display: flex; flex-direction: column; gap: 18px;">
+                <fieldset>
+                    <legend>
+                        Have you been vaccinated against seasonal flu or COVID-19
+                        in the past year?
+                    </legend>
+
+                    <label>
+                        <input type="radio" name="vaccinated-past-year" value="yes">
+                        Yes
+                    </label>
+
+                    <label>
+                        <input type="radio" name="vaccinated-past-year" value="no">
+                        No
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Do you currently have health insurance?</legend>
+
+                    <label>
+                        <input type="radio" name="health-insurance" value="yes">
+                        Yes
+                    </label>
+
+                    <label>
+                        <input type="radio" name="health-insurance" value="no">
+                        No
+                    </label>
+                </fieldset>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label for="health-rating">
+                        On a scale of 1 to 10, how would you rate your health today?
+                    </label>
+
+                    <div>
+                        Current rating:
+                        <output id="health-rating-output" for="health-rating">6</output>
+                    </div>
+
+                    <input id="health-rating" name="health-rating" type="range" min="1" max="10" value="6" step="1"
+                        oninput="document.getElementById('health-rating-output').value = this.value">
+
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>1 — Poor</span>
+                        <span>10 — Excellent</span>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
 
     <script src="" async defer></script>
 </body>
+<footer style="
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+    background-color: #f2f2f2;
+    border-top: 1px solid #cccccc;
+">
+    <p style="margin: 0;">
+        &copy; 2026 CougarAid Medical Center. All rights reserved.
+    </p>
+
+    <p style="margin: 8px 0 0;">
+        Contact us:
+        <a href="mailto:support@cougaraidmedical.com">
+            support@cougaraidmedical.com
+        </a>
+    </p>
+</footer>
 
 </html>

@@ -1,0 +1,26 @@
+/* Typography based on UH Web Style Guidelines:
+   https://www.uh.edu/marcom/guidelines-policies/web-style/#typography */
+
+@import url("https://fonts.googleapis.com/css2?family=League+Gothic&family=Source+Sans+3:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
+
+body {
+    font-family: "Source Sans 3", sans-serif;
+    font-weight: 400;
+    font-size: 16px; /* UH minimum base size */
+    line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "League Gothic", sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+small {
+    font-size: 75%; /* no smaller than 12px */
+}
