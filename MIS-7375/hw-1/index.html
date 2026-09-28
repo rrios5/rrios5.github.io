@@ -7,10 +7,6 @@ Version: 1.0
 Description: A simple patient registration form to register an account for them in our system.
 -->
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html lang="en">
 
 <head>
@@ -18,27 +14,28 @@ Description: A simple patient registration form to register an account for them 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>HW1</title>
     <meta name="description" content="">
+    <!-- Scales the page to the device width so it works on phones -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- All styling lives in style.css; this page has no inline styles -->
     <link rel="stylesheet" href="style.css">
+    <!-- script.js fills in the banner's day/date. defer runs it after the HTML is parsed, so the banner exists. -->
     <script src="script.js" defer></script>
 </head>
 
 <body>
-    <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
+    <!-- Banner (same markup in thankyou.html) -->
     <header>
         <nav class="site-nav" aria-label="Primary navigation">
+            <!-- Logo links to the site home page; aria-label tells screen readers where the link goes -->
             <a class="site-logo" href="/" aria-label="CougarAid Medical Center home">
                 <img src="/MIS-7375/hw-1/assets/cougaraid-logo.png" alt="CougarAid Medical Center">
             </a>
 
+            <!-- Right side of the banner: date/time on top, nav links below -->
             <div class="nav-right">
                 <p class="nav-datetime">
                     📅 <time id="client-datetime"></time>
                 </p>
-
                 <div class="nav-links">
                     <a href="#registration-form">
                         📝 Registration Form
@@ -54,10 +51,10 @@ Description: A simple patient registration form to register an account for them 
 
     <main>
         <h1>CougarAid Medical Center</h1>
-
         <form id="registration-form" action="thankyou.html" method="get">
             <p><span class="req">*</span> Required field</p>
 
+            <!-- Section 1: Your Information (dictionary 7-14; 12 ssn_encrypted is system-generated) -->
             <h2>Your Information</h2>
             <div class="form-section">
                 <div class="form-row">
@@ -79,18 +76,27 @@ Description: A simple patient registration form to register an account for them 
                 </div>
 
                 <div class="form-row">
+                    <!--
+                    dob: type="text" (not "date") so it's typed as MM/DD/YYYY, as the dictionary asks.
+                    The database stores YYYYMMDD, which is why maxlength is 10 here but the dictionary size is 8.
+                    -->
                     <div class="field">
                         <label for="dob">Date of Birth <span class="req">*</span></label>
                         <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" maxlength="10" minlength="10"
                             pattern="^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/(19|20)[0-9]{2}$"
                             title="Date as MM/DD/YYYY" required>
                     </div>
+                    <!--
+                    ssn_plain: type="password" hides the SSN while it's typed. Per the dictionary, this plain value
+                    is never stored; the server saves an encrypted copy instead (ssn_encrypted).
+                    -->
                     <div class="field">
                         <label for="ssn_plain">Social Security Number <span class="req">*</span></label>
-                        <input type="password" id="ssn_plain" name="ssn_plain" placeholder="XXX-XX-XXXX"
-                            maxlength="11" minlength="9" pattern="^\d{3}-?\d{2}-?\d{4}$"
+                        <input type="password" id="ssn_plain" name="ssn_plain" placeholder="XXX-XX-XXXX" maxlength="11"
+                            minlength="9" pattern="^\d{3}-?\d{2}-?\d{4}$"
                             title="9 digits, dashes optional (XXX-XX-XXXX)" autocomplete="off" required>
                     </div>
+                    <!-- preferred_language: the datalist suggests languages, but the patient can type any language -->
                     <div class="field">
                         <label for="preferred_language">Preferred Language</label>
                         <input type="text" id="preferred_language" name="preferred_language" list="language-list"
@@ -110,6 +116,10 @@ Description: A simple patient registration form to register an account for them 
                     </div>
                 </div>
 
+                <!--
+                Radio buttons that share a name form one group, so only one can be picked.
+                required on the group means the patient has to choose one before submitting.
+                -->
                 <fieldset>
                     <legend>Sex assigned at birth <span class="req">*</span></legend>
                     <div class="option-row">
@@ -120,6 +130,7 @@ Description: A simple patient registration form to register an account for them 
                 </fieldset>
             </div>
 
+            <!-- Section 2: Address & Contact (dictionary 15-22) -->
             <h2>Address &amp; Contact</h2>
             <div class="form-section">
                 <div class="form-row">
@@ -136,10 +147,14 @@ Description: A simple patient registration form to register an account for them 
                 <div class="form-row">
                     <div class="field">
                         <label for="city">City <span class="req">*</span></label>
-                        <input type="text" id="city" name="city" maxlength="30" minlength="2"
-                            pattern="^[A-Za-z .'\-]+$" title="Letters, spaces, periods, apostrophes, and hyphens only"
-                            required>
+                        <input type="text" id="city" name="city" maxlength="30" minlength="2" pattern="^[A-Za-z .'\-]+$"
+                            title="Letters, spaces, periods, apostrophes, and hyphens only" required>
                     </div>
+                    <!--
+                    state: each value is the 2-letter code the database stores (50 states + DC + PR).
+                    Texas is preselected (dictionary default TX). The blank first option is there because
+                    HTML requires one on a required dropdown.
+                    -->
                     <div class="field">
                         <label for="state">State <span class="req">*</span></label>
                         <select id="state" name="state" required>
@@ -198,20 +213,33 @@ Description: A simple patient registration form to register an account for them 
                             <option value="WY">Wyoming</option>
                         </select>
                     </div>
+                    <!--
+                    zip: type="text", because the dictionary says it's not a number field. A number input would
+                    reject the dash in ZIP+4, and ZIP codes like 02134 have to keep their leading zero.
+                    -->
                     <div class="field">
                         <label for="zip">ZIP Code <span class="req">*</span></label>
-                        <input type="text" id="zip" name="zip" maxlength="10" minlength="5"
-                            pattern="^\d{5}(-?\d{4})?$" title="5-digit ZIP or ZIP+4 (12345 or 12345-6789)" required>
+                        <input type="text" id="zip" name="zip" maxlength="10" minlength="5" pattern="^\d{5}(-?\d{4})?$"
+                            title="5-digit ZIP or ZIP+4 (12345 or 12345-6789)" required>
                     </div>
                 </div>
 
                 <div class="form-row">
+                    <!--
+                    email: type="email" gives the browser's basic format check. The dictionary pattern adds a
+                    stricter rule: the address must end in a domain like .com.
+                    -->
                     <div class="field">
                         <label for="email">Email <span class="req">*</span></label>
                         <input type="email" id="email" name="email" placeholder="name@domain.com" maxlength="60"
                             minlength="5" pattern="^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$"
                             title="Email address, name@domain.tld" required>
                     </div>
+                    <!--
+                    phone1: the dictionary stores 10 digits as NXXNXXXXXX (N = 2-9, because area codes and
+                    exchanges can't start with 0 or 1). The pattern also accepts (713) 555-0123 and 713-555-0123,
+                    so maxlength is 14, not 10.
+                    -->
                     <div class="field">
                         <label for="phone1">Mobile Phone</label>
                         <input type="tel" id="phone1" name="phone1" placeholder="(713) 555-0123" maxlength="14"
@@ -230,6 +258,7 @@ Description: A simple patient registration form to register an account for them 
                 </fieldset>
             </div>
 
+            <!-- Section 3: Insurance (dictionary 23-25) -->
             <h2>Insurance</h2>
             <div class="form-section">
                 <fieldset>
@@ -241,6 +270,10 @@ Description: A simple patient registration form to register an account for them 
                 </fieldset>
 
                 <div class="form-row">
+                    <!--
+                    insurance_provider: the dictionary makes this required only when has_insurance = Y.
+                    HTML can't express "required only if" on its own, so this needs JavaScript and isn't enforced yet.
+                    -->
                     <div class="field">
                         <label for="insurance_provider">Insurance Provider (required if you have insurance)</label>
                         <select id="insurance_provider" name="insurance_provider">
@@ -258,6 +291,7 @@ Description: A simple patient registration form to register an account for them 
                             <option value="Other">Other</option>
                         </select>
                     </div>
+                    <!-- member_id: the dictionary regex [A-Za-z0-9-] with the hyphen escaped (see the pattern note above the form) -->
                     <div class="field">
                         <label for="member_id">Member ID</label>
                         <input type="text" id="member_id" name="member_id" maxlength="20" pattern="^[A-Za-z0-9\-]+$"
@@ -266,8 +300,13 @@ Description: A simple patient registration form to register an account for them 
                 </div>
             </div>
 
+            <!-- Section 4: Health History (dictionary 26-37) -->
             <h2>Health History</h2>
             <div class="form-section">
+                <!--
+                Each condition is its own yes/no field (hx_asthma through hx_none). A checked box submits
+                value 1; an unchecked box isn't sent at all, which the server reads as the dictionary default 0.
+                -->
                 <fieldset>
                     <legend>Have you ever been diagnosed with any of the following? (Check all that apply)</legend>
                     <div class="checkbox-list">
@@ -336,6 +375,11 @@ Description: A simple patient registration form to register an account for them 
                     <textarea id="symptoms" name="symptoms" rows="4" cols="50" maxlength="500"></textarea>
                 </div>
 
+                <!--
+                health_scale: slider from 1 to 10, default 5. The oninput code copies the slider's value into
+                the <output> so the patient sees the number. There's no required attribute because HTML doesn't
+                allow it on a slider, and a slider always submits a value anyway.
+                -->
                 <div class="range-field">
                     <label for="health_scale">
                         On a scale of 1 to 10, how do you feel today? <span class="req">*</span>
@@ -356,9 +400,14 @@ Description: A simple patient registration form to register an account for them 
                 </div>
             </div>
 
+            <!-- Section 5: Patient Portal Account (dictionary 38-40; 41 and 42 are system-generated) -->
             <h2>Patient Portal Account</h2>
             <div class="form-section">
                 <div class="form-row">
+                    <!--
+                    userid: must be unique in the database, which the server has to check. Uses the dictionary
+                    regex with the hyphen escaped: [A-Za-z0-9_-] became [A-Za-z0-9_\-] (see the note above the form).
+                    -->
                     <div class="field">
                         <label for="userid">User ID <span class="req">*</span></label>
                         <input type="text" id="userid" name="userid" maxlength="20" minlength="5"
@@ -366,12 +415,18 @@ Description: A simple patient registration form to register an account for them 
                             title="5-20 characters: start with a letter, then letters, numbers, _ or -"
                             autocomplete="username" required>
                         <small>
-                            5–20 characters. Starts with a letter; letters, numbers, _ and - only. Separate from your email.
+                            5–20 characters. Starts with a letter; letters, numbers, _ and - only. Separate from your
+                            email.
                         </small>
                     </div>
                 </div>
 
                 <div class="form-row">
+                    <!--
+                    password_plain: each (?=.*...) in the pattern is a lookahead. Together they require at least
+                    one digit, one lowercase letter, and one uppercase letter, and .{8,} requires 8+ characters.
+                    Per the dictionary, this plain value is never stored; the server saves a hash (password_hashed).
+                    -->
                     <div class="field">
                         <label for="password_plain">Password <span class="req">*</span></label>
                         <input type="password" id="password_plain" name="password_plain" maxlength="30" minlength="8"
@@ -382,6 +437,10 @@ Description: A simple patient registration form to register an account for them 
                             At least 8 characters, with an uppercase letter, a lowercase letter, and a number.
                         </small>
                     </div>
+                    <!--
+                    password_confirm: must equal password_plain, but HTML can't compare two fields, so this
+                    needs JavaScript and isn't enforced yet. The dictionary says it's never stored.
+                    -->
                     <div class="field">
                         <label for="password_confirm">Confirm Password <span class="req">*</span></label>
                         <input type="password" id="password_confirm" name="password_confirm" maxlength="30"
@@ -391,14 +450,20 @@ Description: A simple patient registration form to register an account for them 
                 </div>
             </div>
 
+            <!-- Section 6: Privacy Acknowledgment (dictionary 43; 44 hipaa_ack_date is system-generated) -->
             <h2>Privacy Acknowledgment</h2>
             <div class="form-section">
+                <!-- Required checkbox: the form won't submit until it's checked (the dictionary says it must be 1) -->
                 <label>
                     <input type="checkbox" id="hipaa_ack" name="hipaa_ack" value="1" required>
                     I acknowledge that I have received and reviewed the CougarAid Medical Center Notice of Privacy
                     Practices (HIPAA). <span class="req">*</span>
                 </label>
 
+                <!--
+                Submit runs the browser's checks (required, pattern, length) and then opens thankyou.html.
+                Clear Form resets every field to its default, including the slider back to 5.
+                -->
                 <div class="form-row">
                     <button type="submit">Submit</button>
                     <button type="reset">Clear Form</button>
@@ -407,6 +472,7 @@ Description: A simple patient registration form to register an account for them 
         </form>
     </main>
 
+    <!-- Footer (same markup in thankyou.html) -->
     <footer class="site-footer">
         <p>
             &copy; 2026 CougarAid Medical Center. All rights reserved.
