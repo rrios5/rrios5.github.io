@@ -18,6 +18,13 @@ body {
     font-size: 16px;
     /* UH minimum base size */
     line-height: 1.5;
+    /* Tiled cougar logo as a faint repeating background pattern;
+       the white overlay on top fades the logo so it's barely visible */
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.94)),
+        url("assets/cougar-pattern-logo.png");
+    background-repeat: repeat;
+    background-size: 60px 60px;
 }
 
 h1,
