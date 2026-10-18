@@ -1,0 +1,526 @@
+<!--
+Program name: Patient Registration Protocol
+Author: Rogelio Rios
+Date created: 09/21/2026
+Date last edited: 10/18/2026
+Version: 3.0
+Description: Patient registration form for CougarAid Medical Center. HW3 adds JavaScript checks that run while the
+patient types or leaves a field, plus a VALIDATE button that has to pass before the Submit button shows up.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>HW3</title>
+    <meta name="description" content="">
+    <!-- Scales the page to the device width so it works on phones -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- All styling lives in style.css; this page has no inline styles -->
+    <link rel="stylesheet" href="style.css">
+    <!-- script.js has the banner date/time and all the form checks. defer runs it after the HTML is parsed. -->
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <!-- Banner (same markup in thankyou.html) -->
+    <header>
+        <nav class="site-nav" aria-label="Primary navigation">
+            <!-- Logo links to the site home page; aria-label tells screen readers where the link goes -->
+            <a class="site-logo" href="/" aria-label="CougarAid Medical Center home">
+                <img src="assets/cougaraid-logo.png" alt="CougarAid Medical Center">
+            </a>
+
+            <!-- Right side of the banner: date/time on top, nav links below -->
+            <div class="nav-right">
+                <p class="nav-datetime">
+                    📅 <time id="client-datetime"></time>
+                </p>
+                <div class="nav-links">
+                    <a href="#registration-form">
+                        📝 Registration Form
+                    </a>
+
+                    <a href="https://www.cdc.gov/">
+                        🌐 CDC Website
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <h1>CougarAid Medical Center</h1>
+        <!--
+        The HTML checks (required, minlength, maxlength, pattern) are still here as a backup,
+        but script.js does the real checking now. Every field has an empty error span under it
+        (id = field id + "_error") where the JavaScript puts its message.
+        -->
+        <form id="registration-form" action="thankyou.html" method="get">
+            <p><span class="req">*</span> Required field. Hover over a field to see its rules.</p>
+
+            <!-- Section 1: Your Information (dictionary 7-14; 12 ssn_encrypted is system-generated) -->
+            <h2>Your Information</h2>
+            <div class="form-section">
+                <div class="form-row">
+                    <div class="field">
+                        <label for="firstname">First Name <span class="req">*</span></label>
+                        <input type="text" id="firstname" name="firstname" maxlength="30" minlength="1"
+                            pattern="^[A-Za-z'\-]+$" placeholder="Letters, ' and - only"
+                            title="1 to 30 characters. Letters, apostrophes and dashes only" required>
+                        <span class="error" id="firstname_error"></span>
+                    </div>
+                    <div class="field">
+                        <label for="middleinit">Middle Initial</label>
+                        <input type="text" id="middleinit" name="middleinit" class="input-initial" maxlength="1"
+                            pattern="^[A-Za-z]?$" title="Optional. One letter, no numbers">
+                        <span class="error" id="middleinit_error"></span>
+                    </div>
+                    <div class="field">
+                        <label for="lastname">Last Name <span class="req">*</span></label>
+                        <input type="text" id="lastname" name="lastname" maxlength="30" minlength="1"
+                            pattern="^[A-Za-z'\-]+$" placeholder="Letters, ' and - only"
+                            title="1 to 30 characters. Letters, apostrophes and dashes only" required>
+                        <span class="error" id="lastname_error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <!--
+                    dob: type="text" (not "date") so it's typed as MM/DD/YYYY, as the dictionary asks.
+                    The slashes get added by formatDOB() as the patient types, so they only type the numbers.
+                    -->
+                    <div class="field">
+                        <label for="dob">Date of Birth <span class="req">*</span></label>
+                        <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" maxlength="10" minlength="10"
+                            inputmode="numeric" pattern="^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/(19|20)[0-9]{2}$"
+                            title="MM/DD/YYYY. Can't be in the future or more than 120 years ago" required>
+                        <span class="error" id="dob_error"></span>
+                    </div>
+                    <!--
+                    ssn_plain: type="password" hides the SSN while it's typed. formatSSN() adds the dashes.
+                    Per the dictionary, this plain value is never stored; the server saves an encrypted copy.
+                    -->
+                    <div class="field">
+                        <label for="ssn_plain">Social Security Number <span class="req">*</span></label>
+                        <input type="password" id="ssn_plain" name="ssn_plain" placeholder="XXX-XX-XXXX" maxlength="11"
+                            minlength="9" inputmode="numeric" pattern="^\d{3}-?\d{2}-?\d{4}$"
+                            title="9 numbers. Dashes are added for you" autocomplete="off" required>
+                        <span class="error" id="ssn_plain_error"></span>
+                    </div>
+                    <!-- preferred_language: the datalist suggests languages, but the patient can type any language -->
+                    <div class="field">
+                        <label for="preferred_language">Preferred Language</label>
+                        <input type="text" id="preferred_language" name="preferred_language" list="language-list"
+                            maxlength="20" value="English" title="Optional. Letters only, 20 characters max">
+                        <datalist id="language-list">
+                            <option value="English"></option>
+                            <option value="Spanish"></option>
+                            <option value="Vietnamese"></option>
+                            <option value="Chinese"></option>
+                            <option value="Arabic"></option>
+                            <option value="Urdu"></option>
+                            <option value="Tagalog"></option>
+                            <option value="Hindi"></option>
+                            <option value="French"></option>
+                            <option value="Korean"></option>
+                        </datalist>
+                        <span class="error" id="preferred_language_error"></span>
+                    </div>
+                </div>
+
+                <!--
+                Radio buttons that share a name form one group, so only one can be picked.
+                The fieldset id matches the group name so showError("sex", ...) can outline the whole group.
+                -->
+                <fieldset id="sex">
+                    <legend>Sex assigned at birth <span class="req">*</span></legend>
+                    <div class="option-row">
+                        <label><input type="radio" name="sex" value="M" required> Male</label>
+                        <label><input type="radio" name="sex" value="F" required> Female</label>
+                        <label><input type="radio" name="sex" value="O" required> Other / prefer not to say</label>
+                    </div>
+                    <span class="error" id="sex_error"></span>
+                </fieldset>
+            </div>
+
+            <!-- Section 2: Address & Contact (dictionary 15-22) -->
+            <h2>Address &amp; Contact</h2>
+            <div class="form-section">
+                <div class="form-row">
+                    <div class="field">
+                        <label for="addr1">Address Line 1 <span class="req">*</span></label>
+                        <input type="text" id="addr1" name="addr1" maxlength="30" minlength="2"
+                            pattern="^[A-Za-z0-9 .,#\-]+$" placeholder="123 Main St"
+                            title="2 to 30 characters. Letters, numbers, spaces, . , - and #" required>
+                        <span class="error" id="addr1_error"></span>
+                    </div>
+                    <div class="field">
+                        <label for="addr2">Address Line 2</label>
+                        <input type="text" id="addr2" name="addr2" maxlength="30" minlength="2"
+                            pattern="^[A-Za-z0-9 .,#\-]+$" placeholder="Apt, suite, unit"
+                            title="Optional. If used, 2 to 30 characters">
+                        <span class="error" id="addr2_error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="field">
+                        <label for="city">City <span class="req">*</span></label>
+                        <input type="text" id="city" name="city" maxlength="30" minlength="2" pattern="^[A-Za-z .'\-]+$"
+                            title="2 to 30 characters. Letters, spaces, periods, apostrophes and dashes" required>
+                        <span class="error" id="city_error"></span>
+                    </div>
+                    <!--
+                    state: each value is the 2-letter code the database stores (50 states + DC + PR).
+                    No default on purpose, so the patient has to pick one. The blank first option is the "null" entry.
+                    -->
+                    <div class="field">
+                        <label for="state">State <span class="req">*</span></label>
+                        <select id="state" name="state" title="Pick your state" required>
+                            <option value="">-- Select state --</option>
+                            <option value="AL">Alabama</option>
+                            <option value="AK">Alaska</option>
+                            <option value="AZ">Arizona</option>
+                            <option value="AR">Arkansas</option>
+                            <option value="CA">California</option>
+                            <option value="CO">Colorado</option>
+                            <option value="CT">Connecticut</option>
+                            <option value="DE">Delaware</option>
+                            <option value="DC">District of Columbia</option>
+                            <option value="FL">Florida</option>
+                            <option value="GA">Georgia</option>
+                            <option value="HI">Hawaii</option>
+                            <option value="ID">Idaho</option>
+                            <option value="IL">Illinois</option>
+                            <option value="IN">Indiana</option>
+                            <option value="IA">Iowa</option>
+                            <option value="KS">Kansas</option>
+                            <option value="KY">Kentucky</option>
+                            <option value="LA">Louisiana</option>
+                            <option value="ME">Maine</option>
+                            <option value="MD">Maryland</option>
+                            <option value="MA">Massachusetts</option>
+                            <option value="MI">Michigan</option>
+                            <option value="MN">Minnesota</option>
+                            <option value="MS">Mississippi</option>
+                            <option value="MO">Missouri</option>
+                            <option value="MT">Montana</option>
+                            <option value="NE">Nebraska</option>
+                            <option value="NV">Nevada</option>
+                            <option value="NH">New Hampshire</option>
+                            <option value="NJ">New Jersey</option>
+                            <option value="NM">New Mexico</option>
+                            <option value="NY">New York</option>
+                            <option value="NC">North Carolina</option>
+                            <option value="ND">North Dakota</option>
+                            <option value="OH">Ohio</option>
+                            <option value="OK">Oklahoma</option>
+                            <option value="OR">Oregon</option>
+                            <option value="PA">Pennsylvania</option>
+                            <option value="PR">Puerto Rico</option>
+                            <option value="RI">Rhode Island</option>
+                            <option value="SC">South Carolina</option>
+                            <option value="SD">South Dakota</option>
+                            <option value="TN">Tennessee</option>
+                            <option value="TX">Texas</option>
+                            <option value="UT">Utah</option>
+                            <option value="VT">Vermont</option>
+                            <option value="VA">Virginia</option>
+                            <option value="WA">Washington</option>
+                            <option value="WV">West Virginia</option>
+                            <option value="WI">Wisconsin</option>
+                            <option value="WY">Wyoming</option>
+                        </select>
+                        <span class="error" id="state_error"></span>
+                    </div>
+                    <!--
+                    zip: type="text" so ZIP codes like 02134 keep their leading zero. HW3 wants 5 digits only,
+                    so ZIP+4 from HW1 is gone.
+                    -->
+                    <div class="field">
+                        <label for="zip">ZIP Code <span class="req">*</span></label>
+                        <input type="text" id="zip" name="zip" maxlength="5" minlength="5" pattern="^\d{5}$"
+                            inputmode="numeric" placeholder="77004" title="5 numbers" required>
+                        <span class="error" id="zip_error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <!-- email: script.js forces it to lowercase and checks the name@domain.tld format -->
+                    <div class="field">
+                        <label for="email">Email <span class="req">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="name@domain.com" maxlength="60"
+                            minlength="5" pattern="^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$"
+                            title="Email address, name@domain.com" required>
+                        <span class="error" id="email_error"></span>
+                    </div>
+                    <!--
+                    phone1: area codes and exchanges can't start with 0 or 1. checkPhone() reformats it as
+                    (713) 555-0123 once it's valid, so maxlength is 14, not 10.
+                    -->
+                    <div class="field">
+                        <label for="phone1">Mobile Phone</label>
+                        <input type="tel" id="phone1" name="phone1" placeholder="(713) 555-0123" maxlength="14"
+                            minlength="10" inputmode="numeric"
+                            pattern="^(\([2-9]\d{2}\) ?|[2-9]\d{2}[ \-]?)[2-9]\d{2}[ \-]?\d{4}$"
+                            title="10-digit US number. Required if you pick Phone call or Text below">
+                        <span class="error" id="phone1_error"></span>
+                    </div>
+                </div>
+
+                <fieldset>
+                    <legend>Preferred contact method</legend>
+                    <div class="option-row">
+                        <label><input type="radio" name="contact_pref" value="P" checked> Phone call</label>
+                        <label><input type="radio" name="contact_pref" value="T"> Text</label>
+                        <label><input type="radio" name="contact_pref" value="E"> Email</label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Section 3: Insurance (dictionary 23-25) -->
+            <h2>Insurance</h2>
+            <div class="form-section">
+                <fieldset id="has_insurance">
+                    <legend>Do you currently have health insurance? <span class="req">*</span></legend>
+                    <div class="option-row">
+                        <label><input type="radio" name="has_insurance" value="Y" required> Yes</label>
+                        <label><input type="radio" name="has_insurance" value="N" required> No</label>
+                    </div>
+                    <span class="error" id="has_insurance_error"></span>
+                </fieldset>
+
+                <div class="form-row">
+                    <!--
+                    insurance_provider: required only when has_insurance = Y. HTML can't do "required only if",
+                    so checkInsuranceProvider() handles it. Picking No disables both insurance fields.
+                    -->
+                    <div class="field">
+                        <label for="insurance_provider">Insurance Provider (required if you have insurance)</label>
+                        <select id="insurance_provider" name="insurance_provider"
+                            title="Required if you answered Yes above">
+                            <option value="">-- Select provider --</option>
+                            <option value="Aetna">Aetna</option>
+                            <option value="Ambetter">Ambetter</option>
+                            <option value="Blue Cross Blue Shield of Texas">Blue Cross Blue Shield of Texas</option>
+                            <option value="Cigna">Cigna</option>
+                            <option value="Community Health Choice">Community Health Choice</option>
+                            <option value="Humana">Humana</option>
+                            <option value="Medicaid">Medicaid</option>
+                            <option value="Medicare">Medicare</option>
+                            <option value="Molina Healthcare">Molina Healthcare</option>
+                            <option value="UnitedHealthcare">UnitedHealthcare</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span class="error" id="insurance_provider_error"></span>
+                    </div>
+                    <div class="field">
+                        <label for="member_id">Member ID</label>
+                        <input type="text" id="member_id" name="member_id" maxlength="20" pattern="^[A-Za-z0-9\-]+$"
+                            placeholder="As shown on your card"
+                            title="Optional. Letters, numbers and dashes only, 20 characters max">
+                        <span class="error" id="member_id_error"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Health History (dictionary 26-37) -->
+            <h2>Health History</h2>
+            <div class="form-section">
+                <!--
+                Each condition is its own yes/no field (hx_asthma through hx_none). A checked box submits
+                value 1; an unchecked box isn't sent at all, which the server reads as the dictionary default 0.
+                checkHealthHistory() stops "None of the above" from being checked along with a condition.
+                -->
+                <fieldset id="hx">
+                    <legend>Have you ever been diagnosed with any of the following? (Check all that apply)</legend>
+                    <div class="checkbox-list">
+                        <label>
+                            <input type="checkbox" id="hx_asthma" name="hx_asthma" value="1">
+                            Asthma
+                        </label>
+
+                        <label>
+                            <input type="checkbox" id="hx_diabetes" name="hx_diabetes" value="1">
+                            Diabetes
+                        </label>
+
+                        <label>
+                            <input type="checkbox" id="hx_hypertension" name="hx_hypertension" value="1">
+                            High blood pressure
+                        </label>
+
+                        <label>
+                            <input type="checkbox" id="hx_heart_disease" name="hx_heart_disease" value="1">
+                            Heart disease
+                        </label>
+
+                        <label>
+                            <input type="checkbox" id="hx_high_cholesterol" name="hx_high_cholesterol" value="1">
+                            High cholesterol
+                        </label>
+
+                        <label>
+                            <input type="checkbox" id="hx_thyroid" name="hx_thyroid" value="1">
+                            Thyroid disorder
+                        </label>
+
+                        <label>
+                            <input type="checkbox" id="hx_cancer" name="hx_cancer" value="1">
+                            Cancer
+                        </label>
+
+                        <label>
+                            <input type="checkbox" id="hx_none" name="hx_none" value="1">
+                            None of the above
+                        </label>
+                    </div>
+                    <span class="error" id="hx_error"></span>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Are you up to date on your flu vaccine?</legend>
+                    <div class="option-row">
+                        <label><input type="radio" name="flu_vaccinated" value="Y"> Yes</label>
+                        <label><input type="radio" name="flu_vaccinated" value="N"> No</label>
+                        <label><input type="radio" name="flu_vaccinated" value="U"> Not sure</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Do you use tobacco products?</legend>
+                    <div class="option-row">
+                        <label><input type="radio" name="tobacco_use" value="N"> Never</label>
+                        <label><input type="radio" name="tobacco_use" value="F"> Former</label>
+                        <label><input type="radio" name="tobacco_use" value="C"> Current</label>
+                    </div>
+                </fieldset>
+
+                <div class="field">
+                    <label for="symptoms">Current symptoms or reason for visit</label>
+                    <textarea id="symptoms" name="symptoms" rows="4" cols="50" maxlength="500"
+                        placeholder="Optional. Briefly describe how you are feeling"
+                        title="Optional. 500 characters max, no < or >"></textarea>
+                    <small id="symptoms_count">500 characters left</small>
+                    <span class="error" id="symptoms_error"></span>
+                </div>
+
+                <!--
+                health_scale: slider from 1 to 10, default 5. updateHealthScale() in script.js copies the
+                slider's value into the <output> so the patient sees the number as they slide.
+                -->
+                <div class="range-field">
+                    <label for="health_scale">
+                        On a scale of 1 to 10, how do you feel today? <span class="req">*</span>
+                    </label>
+
+                    <div>
+                        Current rating:
+                        <output id="health_scale_output" for="health_scale">5</output>
+                    </div>
+
+                    <input type="range" id="health_scale" name="health_scale" min="1" max="10" step="1" value="5"
+                        title="Slide to pick a number from 1 to 10">
+
+                    <div class="range-labels">
+                        <span>1 — Poor</span>
+                        <span>10 — Feeling great</span>
+                    </div>
+                    <span class="error" id="health_scale_error"></span>
+                </div>
+            </div>
+
+            <!-- Section 5: Patient Portal Account (dictionary 38-40; 41 and 42 are system-generated) -->
+            <h2>Patient Portal Account</h2>
+            <div class="form-section">
+                <div class="form-row">
+                    <div class="field">
+                        <label for="userid">User ID <span class="req">*</span></label>
+                        <input type="text" id="userid" name="userid" maxlength="20" minlength="5"
+                            pattern="^[A-Za-z][A-Za-z0-9_\-]{4,19}$"
+                            title="5-20 characters: start with a letter, then letters, numbers, _ or -"
+                            autocomplete="username" required>
+                        <small>
+                            5–20 characters. Can't start with a number. Letters, numbers, _ and - only, no spaces.
+                        </small>
+                        <span class="error" id="userid_error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <!--
+                    password_plain: each (?=.*...) in the pattern is a lookahead. Together they require at least
+                    one digit, one lowercase letter, and one uppercase letter, and .{8,} requires 8+ characters.
+                    checkPassword() runs on every keystroke and lists whatever is still missing.
+                    -->
+                    <div class="field">
+                        <label for="password_plain">Password <span class="req">*</span></label>
+                        <input type="password" id="password_plain" name="password_plain" maxlength="30" minlength="8"
+                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                            title="At least 8 characters with an uppercase letter, a lowercase letter, and a number"
+                            autocomplete="new-password" required>
+                        <small>
+                            At least 8 characters, with an uppercase letter, a lowercase letter, and a number. Can't be
+                            the same as your User ID.
+                        </small>
+                        <span class="error" id="password_plain_error"></span>
+                    </div>
+                    <!-- password_confirm: checkPasswordConfirm() compares it to password_plain -->
+                    <div class="field">
+                        <label for="password_confirm">Confirm Password <span class="req">*</span></label>
+                        <input type="password" id="password_confirm" name="password_confirm" maxlength="30"
+                            minlength="8" title="Type the same password again" autocomplete="new-password" required>
+                        <small>Must match your password.</small>
+                        <span class="error" id="password_confirm_error"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 6: Privacy Acknowledgment (dictionary 43; 44 hipaa_ack_date is system-generated) -->
+            <h2>Privacy Acknowledgment</h2>
+            <div class="form-section">
+                <div>
+                    <label>
+                        <input type="checkbox" id="hipaa_ack" name="hipaa_ack" value="1"
+                            title="You must check this box to continue" required>
+                        I acknowledge that I have received and reviewed the CougarAid Medical Center Notice of Privacy
+                        Practices (HIPAA). <span class="req">*</span>
+                    </label>
+                    <span class="error" id="hipaa_ack_error"></span>
+                </div>
+
+                <!--
+                VALIDATE replaces the old Submit button. It runs every check in script.js, and only if there
+                are zero errors does the real Submit button show up. REVIEW shows what was entered in a table.
+                Clear Form resets everything, including the slider back to 5.
+                -->
+                <div class="form-row">
+                    <button type="button" id="validate_btn" title="Check every field before submitting">VALIDATE</button>
+                    <button type="button" id="review_btn" title="Show everything you entered">REVIEW</button>
+                    <button type="submit" id="submit_btn" hidden>Submit</button>
+                    <button type="reset" id="clear_btn">Clear Form</button>
+                </div>
+                <p id="validate_msg"></p>
+                <div id="review_output"></div>
+            </div>
+        </form>
+    </main>
+
+    <!-- Footer (same markup in thankyou.html) -->
+    <footer class="site-footer">
+        <p>
+            &copy; 2026 CougarAid Medical Center. All rights reserved.
+        </p>
+
+        <p>
+            Contact us:
+            <a href="mailto:support@cougaraidmedical.com">
+                support@cougaraidmedical.com
+            </a>
+        </p>
+    </footer>
+</body>
+
+</html>
