@@ -1,0 +1,42 @@
+Homework 2 Submission
+
+Rogelio Rios
+MIS 7375
+
+
+PART 1
+
+URL: https://rrios5.github.io/MIS-7375/hw-2/index.html
+
+Theme: A new patient registration form for a medical clinic called CougarAid Medical Center. It is the same theme as Homework 1.
+
+
+PART 2
+
+Synopsis
+
+The page is an online sign-up form for new patients at CougarAid Medical Center. Patients enter their personal info, address, contact info, insurance, health history, and a patient portal login. For this homework I added a REVIEW button that shows everything they entered in a table next to the form, with "pass" or "ERROR:" on each row. I also added a START OVER button.
+
+Most of the checks are HTML (required, min/max, and pattern regular expressions), and every field has a title hint. JavaScript in an external script.js handles only what HTML can't do, like matching the two passwords.
+
+What I am happy with
+
+- The date of birth range comes from today's date. When the page loads, JavaScript sets the date picker's min and max from the same clock the banner shows, so you can't pick a future date or one more than 120 years ago.
+- The password message updates as you type. It lists what is still missing (uppercase, number, special character, and so on), and the list shrinks as you go. It also rejects a password that contains your user ID, first name, or last name. "Passwords do not match" shows up right under the confirm box.
+- The review table lines up and is color-coded. Green for pass, red for errors. The address shows on three lines like a real mailing address. The SSN and password are hidden.
+- The state list is an external file (states.js) with all 50 states, DC, and PR. It starts on "-- Select state --", so the patient has to pick one.
+- The JavaScript errors block Submit the same way the HTML ones do, because I used setCustomValidity(). Submit won't go through until everything is fixed.
+
+What I didn't get working yet
+
+- The SSN and password show up in the thank you page's URL right now, because the form uses method="get" instead of method="post".
+- The insurance provider isn't required when you answer "Yes" to insurance yet.
+- The ZIP code isn't cut down to 5 digits yet. The field accepts a 5-digit ZIP or ZIP+4 (77002-1234) and limits it to 10 characters, but a ZIP+4 isn't shortened to 77002 like the assignment asks.
+- The user ID isn't converted to lowercase yet. The pattern checks the length, the first letter, and that there are no spaces or special characters, but TheJake stays TheJake instead of becoming thejake.
+- The ZIP code isn't checked against the state.
+- The symptoms box blocks double quotes, but it doesn't block HTML tags yet.
+
+
+PART 3
+
+My pseudocode for the page load, each JavaScript check, the REVIEW button, and Submit/Start Over is attached as a PDF: mis7375-homework2-pseudocode.pdf.

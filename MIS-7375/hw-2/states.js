@@ -25,8 +25,8 @@ const STATES = [
 ];
 
 // Adds one <option> per state after the blank "-- Select state --" option that's already in the HTML
-function loadStates(selectId) {
-    const select = document.getElementById(selectId);
+function loadStates(selectName) {
+    const select = document.getElementsByName(selectName)[0];
     STATES.forEach(function (state) {
         select.add(new Option(state[1], state[0]));
     });

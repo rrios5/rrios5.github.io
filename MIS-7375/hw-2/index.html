@@ -7,7 +7,7 @@ Version: 2.0
 Description: A simple patient registration form to register an account for them in our system.
 Homework 2 adds a REVIEW button that redisplays everything in a table next to the form, title hints on
 every field, HTML pattern checks, and JavaScript for the checks HTML can't do (password match, date range,
-slider readout, user ID lowercase, ZIP truncate).
+slider readout).
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -100,7 +100,7 @@ slider readout, user ID lowercase, ZIP truncate).
                             <input type="date" id="dob" name="dob" min="1906-10-17" max="2026-10-17"
                                 title="Required. MM/DD/YYYY. Can't be in the future or more than 120 years ago"
                                 required>
-                            <span class="error" id="dob_error" aria-live="polite"></span>
+                            <span class="error" aria-live="polite"></span>
                         </div>
                         <!--
                         ssn_plain: type="password" hides the SSN while it's typed. Per the dictionary, this plain value
@@ -188,16 +188,14 @@ slider readout, user ID lowercase, ZIP truncate).
                             </select>
                         </div>
                         <!--
-                        zip: type="text" so ZIP codes like 02134 keep their leading zero. ZIP+4 is accepted,
-                        then script.js cuts it down to the first 5 digits and shows the shorter version.
+                        zip: type="text" so ZIP codes like 02134 keep their leading zero. maxlength="10" and the
+                        pattern allow a 5-digit ZIP or ZIP+4 (12345-6789) and nothing else.
                         -->
                         <div class="field">
                             <label for="zip">ZIP Code <span class="req">*</span></label>
                             <input type="text" id="zip" name="zip" maxlength="10" minlength="5"
-                                pattern="^\d{5}(-\d{4})?$"
-                                title="Required. 5-digit ZIP (77002) or ZIP+4 (77002-1234); only the first 5 are kept"
+                                pattern="^\d{5}(-\d{4})?$" title="Required. 5-digit ZIP (77002) or ZIP+4 (77002-1234)"
                                 required>
-                            <span class="error" id="zip_error" aria-live="polite"></span>
                         </div>
                     </div>
 
@@ -362,7 +360,7 @@ slider readout, user ID lowercase, ZIP truncate).
                         <label for="symptoms">Current symptoms or reason for visit</label>
                         <textarea id="symptoms" name="symptoms" rows="4" cols="50" maxlength="500"
                             title="Optional. Up to 500 characters. Please don't use double quotes (&quot;)"></textarea>
-                        <span class="error" id="symptoms_error" aria-live="polite"></span>
+                        <span class="error" aria-live="polite"></span>
                     </div>
 
                     <!--
@@ -394,16 +392,15 @@ slider readout, user ID lowercase, ZIP truncate).
                 <div class="form-section">
                     <div class="form-row">
                         <!--
-                        userid: 5-30 characters, starts with a letter, no spaces. Uppercase is allowed while typing;
-                        script.js converts it to lowercase and shows the corrected version.
+                        userid: 5-30 characters, starts with a letter, no spaces. Uppercase and lowercase are both
+                        allowed.
                         -->
                         <div class="field">
                             <label for="userid">User ID <span class="req">*</span></label>
                             <input type="text" id="userid" name="userid" maxlength="30" minlength="5"
                                 pattern="^[A-Za-z][A-Za-z0-9_\-]{4,29}$"
-                                title="Required. 5 to 30 characters. Start with a letter, then letters, numbers, _ or -. No spaces. Saved in lowercase"
+                                title="Required. 5 to 30 characters. Start with a letter, then letters, numbers, _ or -. No spaces"
                                 autocomplete="username" required>
-                            <span class="error" id="userid_error" aria-live="polite"></span>
                         </div>
                     </div>
 
@@ -421,7 +418,7 @@ slider readout, user ID lowercase, ZIP truncate).
                                 pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])[^&quot;]{8,30}$"
                                 title="Required. 8 to 30 characters with an uppercase letter, a lowercase letter, a number, and a special character like !@#$%. No double quotes. Can't contain your user ID or name"
                                 autocomplete="new-password" required>
-                            <span class="error" id="password_plain_error" aria-live="polite"></span>
+                            <span class="error" aria-live="polite"></span>
                         </div>
                         <!-- password_confirm: HTML can't compare two fields, so script.js checks that they match -->
                         <div class="field">
@@ -429,7 +426,7 @@ slider readout, user ID lowercase, ZIP truncate).
                             <input type="password" id="password_confirm" name="password_confirm" maxlength="30"
                                 minlength="8" title="Required. Type the same password again" autocomplete="new-password"
                                 required>
-                            <span class="error" id="password_confirm_error" aria-live="polite"></span>
+                            <span class="error" aria-live="polite"></span>
                         </div>
                     </div>
                 </div>
