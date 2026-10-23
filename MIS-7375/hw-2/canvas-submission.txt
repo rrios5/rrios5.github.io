@@ -15,9 +15,11 @@ PART 2
 
 Synopsis
 
-The page is an online sign-up form for new patients at CougarAid Medical Center. Patients enter their personal info, address, contact info, insurance, health history, and a patient portal login. For this homework I added a REVIEW button that shows everything they entered in a table next to the form, with "pass" or "ERROR:" on each row. I also added a START OVER button.
+The page is an online sign-up form for new patients at CougarAid Medical Center. Patients enter their name, date of birth, and SSN, then their address and contact info, insurance, a short health history (checkboxes for past conditions, yes/no questions, a symptoms box, and a 1 to 10 "how do you feel today" slider), and a user ID and password for the patient portal. Last, they check the HIPAA privacy acknowledgment.
 
-Most of the checks are HTML (required, min/max, and pattern regular expressions), and every field has a title hint. JavaScript in an external script.js handles only what HTML can't do, like matching the two passwords.
+For this homework I built on my Homework 1 form and added a REVIEW button next to Submit. It shows everything the patient entered in a table to the right of the form (below it on a phone), grouped into sections, with "pass" or "ERROR:" and the reason on each row. The form itself is never rewritten. I also added a START OVER button that clears the form, the error messages, and the review table.
+
+Most of the checks are HTML: required, minlength/maxlength, min/max on the date, and pattern regular expressions for the name, SSN, email, phone, ZIP, user ID, and password. Every field has a title hint that shows up when you hover over it, including the optional fields. JavaScript in an external script.js handles only what HTML can't do: the date of birth range, the slider value, blocking double quotes in the symptoms box, the extra password rules, and matching the two passwords. When something is wrong, the error shows up in red right under that field, and Submit stays blocked until it's fixed. The styling is in an external style.css, and the state list is in an external states.js.
 
 What I am happy with
 
