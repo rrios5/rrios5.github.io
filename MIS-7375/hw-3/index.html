@@ -134,7 +134,7 @@ patient types or leaves a field, plus a VALIDATE button that has to pass before 
                 Radio buttons that share a name form one group, so only one can be picked.
                 The fieldset id matches the group name so showError("sex", ...) can outline the whole group.
                 -->
-                <fieldset id="sex">
+                <fieldset id="sex" title="Required. Pick one">
                     <legend>Sex assigned at birth <span class="req">*</span></legend>
                     <div class="option-row">
                         <label><input type="radio" name="sex" value="M" required> Male</label>
@@ -270,7 +270,7 @@ patient types or leaves a field, plus a VALIDATE button that has to pass before 
                     </div>
                 </div>
 
-                <fieldset>
+                <fieldset title="If you pick Phone call or Text, a phone number is required">
                     <legend>Preferred contact method</legend>
                     <div class="option-row">
                         <label><input type="radio" name="contact_pref" value="P" checked> Phone call</label>
@@ -283,7 +283,7 @@ patient types or leaves a field, plus a VALIDATE button that has to pass before 
             <!-- Section 3: Insurance (dictionary 23-25) -->
             <h2>Insurance</h2>
             <div class="form-section">
-                <fieldset id="has_insurance">
+                <fieldset id="has_insurance" title="Required. Answering No turns off the insurance fields">
                     <legend>Do you currently have health insurance? <span class="req">*</span></legend>
                     <div class="option-row">
                         <label><input type="radio" name="has_insurance" value="Y" required> Yes</label>
@@ -334,7 +334,7 @@ patient types or leaves a field, plus a VALIDATE button that has to pass before 
                 value 1; an unchecked box isn't sent at all, which the server reads as the dictionary default 0.
                 checkHealthHistory() stops "None of the above" from being checked along with a condition.
                 -->
-                <fieldset id="hx">
+                <fieldset id="hx" title="Check all that apply, or None of the above (not both)">
                     <legend>Have you ever been diagnosed with any of the following? (Check all that apply)</legend>
                     <div class="checkbox-list">
                         <label>
@@ -380,7 +380,7 @@ patient types or leaves a field, plus a VALIDATE button that has to pass before 
                     <span class="error" id="hx_error"></span>
                 </fieldset>
 
-                <fieldset>
+                <fieldset title="Optional">
                     <legend>Are you up to date on your flu vaccine?</legend>
                     <div class="option-row">
                         <label><input type="radio" name="flu_vaccinated" value="Y"> Yes</label>
@@ -389,7 +389,7 @@ patient types or leaves a field, plus a VALIDATE button that has to pass before 
                     </div>
                 </fieldset>
 
-                <fieldset>
+                <fieldset title="Optional">
                     <legend>Do you use tobacco products?</legend>
                     <div class="option-row">
                         <label><input type="radio" name="tobacco_use" value="N"> Never</label>

@@ -1,0 +1,497 @@
+<!--
+Program name: Patient Registration Protocol
+Author: Rogelio Rios
+Date created: 09/21/2026
+Date last edited: 10/17/2026
+Version: 2.0
+Description: A simple patient registration form to register an account for them in our system.
+Homework 2 adds a REVIEW button that redisplays everything in a table next to the form, title hints on
+every field, HTML pattern checks, and JavaScript for the checks HTML can't do (password match, date range,
+slider readout, user ID lowercase, ZIP truncate).
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>HW2</title>
+    <meta name="description" content="">
+    <!-- Scales the page to the device width so it works on phones -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- All styling lives in style.css; this page has no inline styles -->
+    <link rel="stylesheet" href="style.css">
+    <!--
+    states.js holds the state dropdown list (an external include). It has to load before script.js,
+    which fills the dropdown. defer keeps that order and runs both after the HTML is parsed.
+    -->
+    <script src="states.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <!-- Banner (same markup in thankyou.html) -->
+    <header>
+        <nav class="site-nav" aria-label="Primary navigation">
+            <!-- Logo links to the site home page; aria-label tells screen readers where the link goes -->
+            <a class="site-logo" href="/" aria-label="CougarAid Medical Center home">
+                <img src="assets/cougaraid-logo.png" alt="CougarAid Medical Center">
+            </a>
+
+            <!-- Right side of the banner: date/time on top, nav links below -->
+            <div class="nav-right">
+                <p class="nav-datetime">
+                    📅 <time id="client-datetime"></time>
+                </p>
+                <div class="nav-links">
+                    <a href="#registration-form">
+                        📝 Registration Form
+                    </a>
+
+                    <a href="https://www.cdc.gov/">
+                        🌐 CDC Website
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <h1>CougarAid Medical Center</h1>
+
+        <!-- Form on the left, review table on the right (stacks on narrow screens, see style.css) -->
+        <div class="hw2-layout">
+            <form id="registration-form" action="thankyou.html" method="get">
+                <p><span class="req">*</span> Required field. Hover over any field for help.</p>
+
+                <!-- Section 1: Your Information (dictionary 7-14; 12 ssn_encrypted is system-generated) -->
+                <h2>Your Information</h2>
+                <div class="form-section">
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="firstname">First Name <span class="req">*</span></label>
+                            <input type="text" id="firstname" name="firstname" maxlength="30" minlength="1"
+                                pattern="^[A-Za-z'\-]{1,30}$"
+                                title="Required. 1 to 30 letters; apostrophes (') and dashes (-) are OK" required>
+                        </div>
+                        <div class="field">
+                            <label for="middleinit">Middle Initial</label>
+                            <input type="text" id="middleinit" name="middleinit" class="input-initial" maxlength="1"
+                                pattern="^[A-Za-z]?$" title="Optional. One letter, no numbers">
+                        </div>
+                        <!-- lastname: digits 2-5 are allowed for suffixes like Smith3 (the 3rd) -->
+                        <div class="field">
+                            <label for="lastname">Last Name <span class="req">*</span></label>
+                            <input type="text" id="lastname" name="lastname" maxlength="30" minlength="1"
+                                pattern="^[A-Za-z2-5'\-]{1,30}$"
+                                title="Required. 1 to 30 letters; apostrophes, dashes, and the numbers 2 to 5 (as in the 3rd) are OK"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <!--
+                        dob: type="date" so the browser enforces min and max. US browsers show it as MM/DD/YYYY.
+                        The hard-coded min/max are a fallback; script.js recalculates them from today's date
+                        when the page loads (no future dates, nothing more than 120 years ago).
+                        -->
+                        <div class="field">
+                            <label for="dob">Date of Birth <span class="req">*</span></label>
+                            <input type="date" id="dob" name="dob" min="1906-10-17" max="2026-10-17"
+                                title="Required. MM/DD/YYYY. Can't be in the future or more than 120 years ago"
+                                required>
+                            <span class="error" id="dob_error" aria-live="polite"></span>
+                        </div>
+                        <!--
+                        ssn_plain: type="password" hides the SSN while it's typed. Per the dictionary, this plain value
+                        is never stored; the server saves an encrypted copy instead (ssn_encrypted).
+                        -->
+                        <div class="field">
+                            <label for="ssn_plain">Social Security Number <span class="req">*</span></label>
+                            <input type="password" id="ssn_plain" name="ssn_plain" placeholder="XXX-XX-XXXX"
+                                maxlength="11" minlength="9" pattern="^\d{3}-?\d{2}-?\d{4}$"
+                                title="Required. 9 digits, dashes optional (XXX-XX-XXXX). Hidden as you type"
+                                autocomplete="off" required>
+                        </div>
+                        <!-- preferred_language: the datalist suggests languages, but the patient can type any language -->
+                        <div class="field">
+                            <label for="preferred_language">Preferred Language</label>
+                            <input type="text" id="preferred_language" name="preferred_language" list="language-list"
+                                maxlength="20" value="English" pattern="^[A-Za-z ]+$"
+                                title="Optional. Pick from the list or type your language (letters only)">
+                            <datalist id="language-list">
+                                <option value="English"></option>
+                                <option value="Spanish"></option>
+                                <option value="Vietnamese"></option>
+                                <option value="Chinese"></option>
+                                <option value="Arabic"></option>
+                                <option value="Urdu"></option>
+                                <option value="Tagalog"></option>
+                                <option value="Hindi"></option>
+                                <option value="French"></option>
+                                <option value="Korean"></option>
+                            </datalist>
+                        </div>
+                    </div>
+
+                    <!--
+                    Radio buttons that share a name form one group, so only one can be picked.
+                    required on the group means the patient has to choose one before submitting.
+                    -->
+                    <fieldset>
+                        <legend>Sex assigned at birth <span class="req">*</span></legend>
+                        <div class="option-row">
+                            <label><input type="radio" name="sex" value="M" title="Required. Choose one" required>
+                                Male</label>
+                            <label><input type="radio" name="sex" value="F" title="Required. Choose one" required>
+                                Female</label>
+                            <label><input type="radio" name="sex" value="O" title="Required. Choose one" required>
+                                Other / prefer not to say</label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <!-- Section 2: Address & Contact (dictionary 15-22) -->
+                <h2>Address &amp; Contact</h2>
+                <div class="form-section">
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="addr1">Address Line 1 <span class="req">*</span></label>
+                            <input type="text" id="addr1" name="addr1" maxlength="30" minlength="2"
+                                title="Required. Street address, 2 to 30 characters" required>
+                        </div>
+                        <!-- addr2: optional, but minlength still applies once something is typed -->
+                        <div class="field">
+                            <label for="addr2">Address Line 2</label>
+                            <input type="text" id="addr2" name="addr2" maxlength="30" minlength="2"
+                                placeholder="Apt, suite, unit"
+                                title="Optional. Apartment, suite, or unit, 2 to 30 characters if used">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="city">City <span class="req">*</span></label>
+                            <input type="text" id="city" name="city" maxlength="30" minlength="2"
+                                pattern="^[A-Za-z .'\-]+$"
+                                title="Required. 2 to 30 letters; spaces, periods, apostrophes, and dashes are OK"
+                                required>
+                        </div>
+                        <!--
+                        state: the options come from states.js (50 states + DC + PR, value = 2-letter code).
+                        The blank first option stays selected until the patient picks one, so they must choose.
+                        -->
+                        <div class="field">
+                            <label for="state">State <span class="req">*</span></label>
+                            <select id="state" name="state" title="Required. Choose your state" required>
+                                <option value="">-- Select state --</option>
+                            </select>
+                        </div>
+                        <!--
+                        zip: type="text" so ZIP codes like 02134 keep their leading zero. ZIP+4 is accepted,
+                        then script.js cuts it down to the first 5 digits and shows the shorter version.
+                        -->
+                        <div class="field">
+                            <label for="zip">ZIP Code <span class="req">*</span></label>
+                            <input type="text" id="zip" name="zip" maxlength="10" minlength="5"
+                                pattern="^\d{5}(-\d{4})?$"
+                                title="Required. 5-digit ZIP (77002) or ZIP+4 (77002-1234); only the first 5 are kept"
+                                required>
+                            <span class="error" id="zip_error" aria-live="polite"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="email">Email <span class="req">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="name@domain.com" maxlength="60"
+                                minlength="5" pattern="^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$"
+                                title="Required. Email address in the format name@domain.tld" required>
+                        </div>
+                        <!-- phone1: area codes and exchanges can't start with 0 or 1, so the first digit is 2-9 -->
+                        <div class="field">
+                            <label for="phone1">Mobile Phone</label>
+                            <input type="tel" id="phone1" name="phone1" placeholder="713-555-0123" maxlength="12"
+                                minlength="12" pattern="^[2-9]\d{2}-\d{3}-\d{4}$"
+                                title="Optional. 10-digit US number as 000-000-0000, e.g. 713-555-0123">
+                        </div>
+                    </div>
+
+                    <fieldset>
+                        <legend>Preferred contact method</legend>
+                        <div class="option-row">
+                            <label><input type="radio" name="contact_pref" value="P" title="How we should reach you"
+                                    checked> Phone call</label>
+                            <label><input type="radio" name="contact_pref" value="T" title="How we should reach you">
+                                Text</label>
+                            <label><input type="radio" name="contact_pref" value="E" title="How we should reach you">
+                                Email</label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <!-- Section 3: Insurance (dictionary 23-25) -->
+                <h2>Insurance</h2>
+                <div class="form-section">
+                    <fieldset>
+                        <legend>Do you currently have health insurance? <span class="req">*</span></legend>
+                        <div class="option-row">
+                            <label><input type="radio" name="has_insurance" value="Y" title="Required. Choose Yes or No"
+                                    required> Yes</label>
+                            <label><input type="radio" name="has_insurance" value="N" title="Required. Choose Yes or No"
+                                    required> No</label>
+                        </div>
+                    </fieldset>
+
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="insurance_provider">Insurance Provider (required if you have insurance)</label>
+                            <select id="insurance_provider" name="insurance_provider"
+                                title="Choose your insurance company if you have insurance">
+                                <option value="">-- Select provider --</option>
+                                <option value="Aetna">Aetna</option>
+                                <option value="Ambetter">Ambetter</option>
+                                <option value="Blue Cross Blue Shield of Texas">Blue Cross Blue Shield of Texas</option>
+                                <option value="Cigna">Cigna</option>
+                                <option value="Community Health Choice">Community Health Choice</option>
+                                <option value="Humana">Humana</option>
+                                <option value="Medicaid">Medicaid</option>
+                                <option value="Medicare">Medicare</option>
+                                <option value="Molina Healthcare">Molina Healthcare</option>
+                                <option value="UnitedHealthcare">UnitedHealthcare</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="member_id">Member ID</label>
+                            <input type="text" id="member_id" name="member_id" maxlength="20" pattern="^[A-Za-z0-9\-]+$"
+                                title="Optional. Letters, numbers, and dashes only, as shown on your insurance card">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Health History (dictionary 26-37) -->
+                <h2>Health History</h2>
+                <div class="form-section">
+                    <!--
+                    Each condition is its own yes/no field (hx_asthma through hx_none). A checked box submits
+                    value 1; an unchecked box isn't sent at all, which the server reads as the dictionary default 0.
+                    -->
+                    <fieldset id="hx">
+                        <legend>Have you ever been diagnosed with any of the following? (Check all that apply)</legend>
+                        <div class="checkbox-list">
+                            <label>
+                                <input type="checkbox" id="hx_asthma" name="hx_asthma" value="1"
+                                    title="Check if you have ever been diagnosed with asthma">
+                                Asthma
+                            </label>
+
+                            <label>
+                                <input type="checkbox" id="hx_diabetes" name="hx_diabetes" value="1"
+                                    title="Check if you have ever been diagnosed with diabetes">
+                                Diabetes
+                            </label>
+
+                            <label>
+                                <input type="checkbox" id="hx_hypertension" name="hx_hypertension" value="1"
+                                    title="Check if you have ever been diagnosed with high blood pressure">
+                                High blood pressure
+                            </label>
+
+                            <label>
+                                <input type="checkbox" id="hx_heart_disease" name="hx_heart_disease" value="1"
+                                    title="Check if you have ever been diagnosed with heart disease">
+                                Heart disease
+                            </label>
+
+                            <label>
+                                <input type="checkbox" id="hx_high_cholesterol" name="hx_high_cholesterol" value="1"
+                                    title="Check if you have ever been diagnosed with high cholesterol">
+                                High cholesterol
+                            </label>
+
+                            <label>
+                                <input type="checkbox" id="hx_thyroid" name="hx_thyroid" value="1"
+                                    title="Check if you have ever been diagnosed with a thyroid disorder">
+                                Thyroid disorder
+                            </label>
+
+                            <label>
+                                <input type="checkbox" id="hx_cancer" name="hx_cancer" value="1"
+                                    title="Check if you have ever been diagnosed with cancer">
+                                Cancer
+                            </label>
+
+                            <label>
+                                <input type="checkbox" id="hx_none" name="hx_none" value="1"
+                                    title="Check if none of the conditions above apply to you">
+                                None of the above
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Are you up to date on your flu vaccine?</legend>
+                        <div class="option-row">
+                            <label><input type="radio" name="flu_vaccinated" value="Y"
+                                    title="Did you get a flu shot this season?"> Yes</label>
+                            <label><input type="radio" name="flu_vaccinated" value="N"
+                                    title="Did you get a flu shot this season?"> No</label>
+                            <label><input type="radio" name="flu_vaccinated" value="U"
+                                    title="Did you get a flu shot this season?"> Not sure</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Do you use tobacco products?</legend>
+                        <div class="option-row">
+                            <label><input type="radio" name="tobacco_use" value="N"
+                                    title="Cigarettes, vapes, cigars, or chewing tobacco"> Never</label>
+                            <label><input type="radio" name="tobacco_use" value="F"
+                                    title="Cigarettes, vapes, cigars, or chewing tobacco"> Former</label>
+                            <label><input type="radio" name="tobacco_use" value="C"
+                                    title="Cigarettes, vapes, cigars, or chewing tobacco"> Current</label>
+                        </div>
+                    </fieldset>
+
+                    <!--
+                    symptoms: HTML doesn't support pattern on a textarea, so script.js does the
+                    "no double quotes" check instead.
+                    -->
+                    <div class="field">
+                        <label for="symptoms">Current symptoms or reason for visit</label>
+                        <textarea id="symptoms" name="symptoms" rows="4" cols="50" maxlength="500"
+                            title="Optional. Up to 500 characters. Please don't use double quotes (&quot;)"></textarea>
+                        <span class="error" id="symptoms_error" aria-live="polite"></span>
+                    </div>
+
+                    <!--
+                    health_scale: slider from 1 to 10, default 5. On every move, updateHealthScale() in script.js
+                    writes a formatted rating (e.g. "7 / 10 - Good") into the <output> next to it.
+                    -->
+                    <div class="range-field">
+                        <label for="health_scale">
+                            On a scale of 1 to 10, how do you feel today? <span class="req">*</span>
+                        </label>
+
+                        <div>
+                            Current rating:
+                            <output id="health_scale_output" for="health_scale">5 / 10 — Okay</output>
+                        </div>
+
+                        <input type="range" id="health_scale" name="health_scale" min="1" max="10" step="1" value="5"
+                            title="Slide to rate how you feel today, 1 (poor) to 10 (great)">
+
+                        <div class="range-labels">
+                            <span>1 — Poor</span>
+                            <span>10 — Feeling great</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: Patient Portal Account (dictionary 38-40; 41 and 42 are system-generated) -->
+                <h2>Patient Portal Account</h2>
+                <div class="form-section">
+                    <div class="form-row">
+                        <!--
+                        userid: 5-30 characters, starts with a letter, no spaces. Uppercase is allowed while typing;
+                        script.js converts it to lowercase and shows the corrected version.
+                        -->
+                        <div class="field">
+                            <label for="userid">User ID <span class="req">*</span></label>
+                            <input type="text" id="userid" name="userid" maxlength="30" minlength="5"
+                                pattern="^[A-Za-z][A-Za-z0-9_\-]{4,29}$"
+                                title="Required. 5 to 30 characters. Start with a letter, then letters, numbers, _ or -. No spaces. Saved in lowercase"
+                                autocomplete="username" required>
+                            <span class="error" id="userid_error" aria-live="polite"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <!--
+                        password_plain: each (?=.*...) is a lookahead. Together they require a lowercase letter, an
+                        uppercase letter, a digit, and a special character (anything that isn't a letter or number).
+                        [^"]{8,30} sets the length and blocks double quotes. script.js also checks that the password
+                        doesn't contain the user ID or the patient's name.
+                        -->
+                        <div class="field">
+                            <label for="password_plain">Password <span class="req">*</span></label>
+                            <input type="password" id="password_plain" name="password_plain" maxlength="30"
+                                minlength="8"
+                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])[^&quot;]{8,30}$"
+                                title="Required. 8 to 30 characters with an uppercase letter, a lowercase letter, a number, and a special character like !@#$%. No double quotes. Can't contain your user ID or name"
+                                autocomplete="new-password" required>
+                            <span class="error" id="password_plain_error" aria-live="polite"></span>
+                        </div>
+                        <!-- password_confirm: HTML can't compare two fields, so script.js checks that they match -->
+                        <div class="field">
+                            <label for="password_confirm">Confirm Password <span class="req">*</span></label>
+                            <input type="password" id="password_confirm" name="password_confirm" maxlength="30"
+                                minlength="8" title="Required. Type the same password again" autocomplete="new-password"
+                                required>
+                            <span class="error" id="password_confirm_error" aria-live="polite"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 6: Privacy Acknowledgment (dictionary 43; 44 hipaa_ack_date is system-generated) -->
+                <h2>Privacy Acknowledgment</h2>
+                <div class="form-section">
+                    <label>
+                        <input type="checkbox" id="hipaa_ack" name="hipaa_ack" value="1"
+                            title="Required. Check to confirm you've read our privacy notice" required>
+                        I acknowledge that I have received and reviewed the CougarAid Medical Center Notice of Privacy
+                        Practices (HIPAA). <span class="req">*</span>
+                    </label>
+
+                    <!--
+                    Review fills the table on the right without leaving the page.
+                    Submit runs the browser's checks (required, pattern, length, plus the JavaScript checks) and
+                    then opens thankyou.html. Start Over resets every field and empties the review table.
+                    -->
+                    <div class="form-row">
+                        <button type="button" id="review_button"
+                            title="Show everything you entered in the table next to the form">Review</button>
+                        <button type="submit" id="submit_button" title="Check your answers and register">Submit</button>
+                        <button type="reset" title="Clear every field and start over">Start Over</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Review area: script.js fills the tbody when REVIEW is clicked. The form itself is never rewritten. -->
+            <aside id="review_area" aria-live="polite">
+                <table id="review_table">
+                    <caption>Please review this information</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Field</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="review-empty">Click REVIEW to see your information here.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Footer (same markup in thankyou.html) -->
+    <footer class="site-footer">
+        <p>
+            &copy; 2026 CougarAid Medical Center. All rights reserved.
+        </p>
+
+        <p>
+            Contact us:
+            <a href="mailto:support@cougaraidmedical.com">
+                support@cougaraidmedical.com
+            </a>
+        </p>
+    </footer>
+</body>
+
+</html>
