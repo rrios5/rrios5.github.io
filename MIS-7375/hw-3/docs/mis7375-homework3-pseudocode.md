@@ -353,23 +353,34 @@ END FUNCTION
 
 All of these get hooked up in `script.js` when the page loads, so there is no JavaScript sitting inline in the HTML.
 
-| Field(s) | Event | What runs |
-|---|---|---|
-| `firstname`, `middleinit`, `lastname`, `preferred_language`, `addr1`, `addr2`, `city`, `email`, `member_id`, `userid` | `oninput` / `onblur` | `oninput` clears the error as soon as the value becomes good; `onblur` runs the full check when the patient leaves the field |
-| `dob` | `oninput` / `onblur` | `oninput` runs `formatDOB` and, if the field is already red, re-runs `checkDOB` so the error clears once it is fixed; `onblur` runs `checkDOB` |
-| `ssn_plain` | `oninput` / `onblur` | `oninput` runs `formatSSN` and, if the field is already red, re-runs `checkSSN`; `onblur` runs `checkSSN` |
-| `zip`, `phone1` | `oninput` / `onblur` | `oninput` strips anything that is not a number and, if the field is already red, re-runs its check; `onblur` runs the full check |
-| `state`, `insurance_provider` | `onchange` | Their check function |
-| `sex` | `onchange` | `checkRequiredRadio("sex")` |
-| `has_insurance` | `onchange` | `toggleInsurance` and `checkInsuranceProvider` |
-| `contact_pref` | `onchange` | Re-runs `checkPhone`, since picking Phone or Text makes the phone number required |
-| `hx_` checkboxes | `onchange` | `checkHealthHistory` |
-| `symptoms` | `oninput` | `checkSymptoms` and shows a live "characters left" count |
-| `health_scale` | `oninput` | `updateHealthScale` and `checkHealthScale` |
-| `password_plain` | `oninput` | `checkPassword` so the list of what is missing shrinks as they type; re-runs `checkPasswordConfirm` if the confirm box already has something in it |
-| `password_confirm` | `oninput` | `checkPasswordConfirm` |
-| `userid` | `oninput` | Also re-runs `checkPassword`, since the password cannot equal the User ID |
-| `hipaa_ack` | `onchange` | `checkHipaa` |
+For the text fields marked `oninput` / `onblur`, `onblur` runs the full check when the patient leaves the field. While they are typing, `oninput` only re-runs the check if the field is already red, so the error goes away the moment it is fixed without warning them halfway through typing.
+
+| Field(s) | Event | Check | What it validates |
+|---|---|---|---|
+| `firstname`, `lastname` | `oninput` / `onblur` | `checkFirstName`, `checkLastName` | Required. 1 to 30 characters. Letters, apostrophes and dashes only. |
+| `middleinit` | `oninput` / `onblur` | `checkMiddleInit` | Optional. One letter, no numbers. Changed to uppercase. |
+| `dob` | `oninput` / `onblur` | `formatDOB`, `checkDOB` | Required. MM/DD/YYYY, with the slashes added while typing. Must be a real date (no 02/30), not in the future, and not more than 120 years ago. |
+| `ssn_plain` | `oninput` / `onblur` | `formatSSN`, `checkSSN` | Required. Exactly 9 digits, with the dashes added while typing. Hidden like a password. |
+| `preferred_language` | `oninput` / `onblur` | `checkLanguage` | Optional. Letters and spaces only, 20 characters max. |
+| `sex` | `onchange` | `checkRequiredRadio("sex")` | One option must be picked. |
+| `addr1` | `oninput` / `onblur` | `checkAddr1` | Required. 2 to 30 characters. Letters, numbers, spaces, `.` `,` `-` and `#` only. |
+| `addr2` | `oninput` / `onblur` | `checkAddr2` | Optional. If filled in, same rules as Address Line 1. |
+| `city` | `oninput` / `onblur` | `checkCity` | Required. 2 to 30 characters. Letters, spaces, periods, apostrophes and dashes only. |
+| `state` | `onchange` | `checkState` | A state must be picked, not the blank "-- Select state --" option. |
+| `zip` | `oninput` / `onblur` | `checkZip` | Required. Exactly 5 digits. Anything that isn't a number is removed while typing. |
+| `email` | `oninput` / `onblur` | `checkEmail` | Required. Must look like name@domain.tld. Changed to lowercase. |
+| `phone1` | `oninput` / `onblur` | `checkPhone` | 10 digits, and the area code and next 3 digits can't start with 0 or 1. Required if the contact method is Phone call or Text. Formatted as (713) 555-0123 once valid. |
+| `contact_pref` | `onchange` | `checkPhone` | Re-checks the phone number, since picking Phone call or Text makes it required. |
+| `has_insurance` | `onchange` | `checkRequiredRadio`, `toggleInsurance`, `checkInsuranceProvider` | Yes or No must be picked. No clears and turns off the insurance fields. |
+| `insurance_provider` | `onchange` | `checkInsuranceProvider` | Required only if the patient answered Yes to having insurance. |
+| `member_id` | `oninput` / `onblur` | `checkMemberId` | Optional. Letters, numbers and dashes only, 20 characters max. Changed to uppercase. |
+| `hx_` checkboxes | `onchange` | `checkHealthHistory` | "None of the above" can't be checked along with a condition. |
+| `symptoms` | `oninput` | `checkSymptoms` | Optional. 500 characters max, no `<` or `>`. Shows a live "characters left" count. |
+| `health_scale` | `oninput` | `updateHealthScale`, `checkHealthScale` | Must be 1 to 10. Shows the number as the patient slides. |
+| `userid` | `oninput` / `onblur` | `checkUserId`, `checkPassword` | Required. 5 to 20 characters, can't start with a number, and only letters, numbers, `_` and `-`. Also re-checks the password, since it can't equal the User ID. |
+| `password_plain` | `oninput` | `checkPassword`, `checkPasswordConfirm` | Required. At least 8 characters with 1 uppercase letter, 1 lowercase letter and 1 number, and can't equal the User ID. Lists what is still missing, and the list shrinks as they type. |
+| `password_confirm` | `oninput` | `checkPasswordConfirm` | Required. Must match the password exactly. |
+| `hipaa_ack` | `onchange` | `checkHipaa` | The box must be checked. |
 
 Every field also has a `title` attribute and placeholder or hint text so the patient knows the rule before they start typing.
 
