@@ -1,0 +1,5 @@
+# macOS folder settings
+.DS_Store
+
+# Word lock files created while a .docx is open
+~$*
