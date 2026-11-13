@@ -2,7 +2,6 @@
 
 Rogelio Rios
 MIS 7375
-Note: I am submitting Homework 3 in place of Homework 2.
 
 ## Part 1
 

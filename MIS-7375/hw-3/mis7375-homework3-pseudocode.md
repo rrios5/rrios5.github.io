@@ -8,7 +8,7 @@ October 12, 2026
 
 ## How I approached it
 
-I built on the same patient registration form from Homework 1. The way I thought about it was pretty simple. Every field gets its own check function in `script.js`, and those functions run on the fly while the patient is typing or when they leave the field, so the warning shows up right away.
+I built on the same patient registration form from Homework 2. The way I thought about it was pretty simple. Every field gets its own check function in `script.js`, and those functions run on the fly while the patient is typing or when they leave the field, so the warning shows up right away.
 
 Then the **VALIDATE** button calls every one of those same functions one more time and counts how many came back bad. If the count is zero, the **Submit** button shows up. If it is not zero, Submit stays hidden and the error messages stay on the page next to the fields that still need fixing.
 
@@ -356,16 +356,16 @@ All of these get hooked up in `script.js` when the page loads, so there is no Ja
 | Field(s) | Event | What runs |
 |---|---|---|
 | `firstname`, `middleinit`, `lastname`, `preferred_language`, `addr1`, `addr2`, `city`, `email`, `member_id`, `userid` | `oninput` / `onblur` | `oninput` clears the error as soon as the value becomes good; `onblur` runs the full check when the patient leaves the field |
-| `dob` | `oninput` / `onblur` | `formatDOB` / `checkDOB` |
-| `ssn_plain` | `oninput` / `onblur` | `formatSSN` / `checkSSN` |
-| `zip`, `phone1` | `oninput` / `onblur` | Strips anything that is not a number / runs the full check |
+| `dob` | `oninput` / `onblur` | `oninput` runs `formatDOB` and, if the field is already red, re-runs `checkDOB` so the error clears once it is fixed; `onblur` runs `checkDOB` |
+| `ssn_plain` | `oninput` / `onblur` | `oninput` runs `formatSSN` and, if the field is already red, re-runs `checkSSN`; `onblur` runs `checkSSN` |
+| `zip`, `phone1` | `oninput` / `onblur` | `oninput` strips anything that is not a number and, if the field is already red, re-runs its check; `onblur` runs the full check |
 | `state`, `insurance_provider` | `onchange` | Their check function |
 | `sex` | `onchange` | `checkRequiredRadio("sex")` |
 | `has_insurance` | `onchange` | `toggleInsurance` and `checkInsuranceProvider` |
 | `contact_pref` | `onchange` | Re-runs `checkPhone`, since picking Phone or Text makes the phone number required |
 | `hx_` checkboxes | `onchange` | `checkHealthHistory` |
 | `symptoms` | `oninput` | `checkSymptoms` and shows a live "characters left" count |
-| `health_scale` | `oninput` | `updateHealthScale` |
+| `health_scale` | `oninput` | `updateHealthScale` and `checkHealthScale` |
 | `password_plain` | `oninput` | `checkPassword` so the list of what is missing shrinks as they type; re-runs `checkPasswordConfirm` if the confirm box already has something in it |
 | `password_confirm` | `oninput` | `checkPasswordConfirm` |
 | `userid` | `oninput` | Also re-runs `checkPassword`, since the password cannot equal the User ID |
@@ -378,7 +378,25 @@ Every field also has a `title` attribute and placeholder or hint text so the pat
 ## 5. Buttons
 
 - **VALIDATE** replaces the old Submit button and runs `validateForm`.
+- **REVIEW** shows everything that was entered in a table (see `reviewForm` below).
 - The real **Submit** button starts out hidden.
+
+```text
+FUNCTION reviewForm()
+    FOR each field on the form
+        GET its label and the value that was entered
+        IF the field is ssn_plain, password_plain or password_confirm THEN
+            SHOW dots instead of the real value (only shows whether something was typed)
+        END IF
+        RUN that field's check function to get OK or not OK
+        ADD a row: label | value | ✔ or ✘ fix
+    END FOR
+    BUILD the table with textContent (not innerHTML) so anything typed can't turn into HTML
+    DISPLAY the table under the buttons
+END FUNCTION
+```
+
+> **Note:** The OK column runs the same check functions as VALIDATE. It is mostly there for debugging.
 
 ```text
 IF the patient changes any field after a successful VALIDATE THEN
@@ -386,11 +404,18 @@ IF the patient changes any field after a successful VALIDATE THEN
 END IF
 
 WHEN Submit is clicked THEN
-    LOAD thankyou.html, which says "Thank you for your submission. We will be contacting you shortly."
+    STOP the form from submitting normally (a GET form would put the SSN and password in the URL)
+    RUN validateForm one last time
+    IF errorCount = 0 THEN
+        LOAD thankyou.html, which says "Thank you for your submission. We will be contacting you shortly."
+    END IF
 
 WHEN Clear Form is clicked THEN
     RESET every field
     clearError on every field
     SET health_scale_output back to 5
+    ENABLE insurance_provider and member_id again
+    RESET the symptoms "characters left" count to 500
+    CLEAR the VALIDATE message and the review table
     HIDE the Submit button
 ```
